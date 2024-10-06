@@ -2,7 +2,6 @@ from pathlib import Path
 from time import sleep
 
 from colorama import Fore, Style, init
-
 from load_game import load
 from main_loop import main_loop
 from player import Player
@@ -10,9 +9,7 @@ from utils import clear_screen, is_single_word
 
 init(autoreset=True)
 
-saves_folder = Path(
-    "/Users/Ekansh/Desktop/Programming-Projects/The-Hunt-Begins/saves/"
-)  # Replace with the path to your folder
+saves_folder = Path("../saves/")  # Replace with the path to your folder
 files = [f.name for f in saves_folder.iterdir() if f.is_file()]
 
 if len(files) > 0:
