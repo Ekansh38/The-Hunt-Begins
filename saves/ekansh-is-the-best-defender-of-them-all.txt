@@ -1,0 +1,1 @@
+{"name": "Ekansh", "strength": 10, "agility": 10, "intelligence": 0, "stealth": 5}

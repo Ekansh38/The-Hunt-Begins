@@ -1,7 +1,9 @@
+import json
 from pathlib import Path
 from time import sleep
 
 from colorama import Fore, Style, init
+
 from load_game import load
 from main_loop import main_loop
 from player import Player
@@ -9,25 +11,7 @@ from utils import clear_screen, is_single_word
 
 init(autoreset=True)
 
-saves_folder = Path("../saves/")  # Replace with the path to your folder
-files = [f.name for f in saves_folder.iterdir() if f.is_file()]
-
-if len(files) > 0:
-    print(Fore.WHITE + "\n1. Saved Games")
-    print(Fore.WHITE + "\n2. New Game")
-    choice = input("> ")
-    if choice == "1":
-        player = load(files, saves_folder)
-        main_loop(player)
-
-
-# Charector Creation
-
-
-ABILITY_POINTS = 25
-MAX_POINTS_PER_ABILITY = 10
-
-# clear_screen()
+clear_screen()
 
 print(Fore.LIGHTYELLOW_EX + "\nWelcome to: " + Fore.RED + "The Hunt Begins!")
 
@@ -35,26 +19,71 @@ input(Fore.LIGHTBLACK_EX + "\nPress Enter to continue...")
 
 clear_screen()
 
-print(Fore.WHITE + "\nIt is time to create your character.\n")
-
-
-print("What is your name?")
-player_name = input("> ")
-
-MAX_NAME_LENGTH = 16
+saves_folder = Path("../saves/")  # Replace with the path to your folder
+files = [f.name for f in saves_folder.iterdir() if f.is_file()]
 
 while True:
-    if len(player_name) == 0:
-        print("\nYou must enter a name.")
+    if len(files) > 0:
+        print(Fore.WHITE + "1. " + Style.BRIGHT + "Saved Games")
+        print(Fore.WHITE + "2. " + Style.BRIGHT + "New Game\n")
+        choice = input("> ")
+        if choice == "1":
+            clear_screen()
+            player = load(files, saves_folder)
+            main_loop(player)
+            break
+        if choice == "2":
+            clear_screen()
+            break
+        if choice not in ["1", "2"]:
+            clear_screen()
+            print(Fore.RED + "\nPlease enter a valid choice. (1, 2)")
+            sleep(3)
+            clear_screen()
+            continue
+
+
+# Charector Creation
+
+
+ABILITY_POINTS = 25
+MAX_POINTS_PER_ABILITY = 10
+MAX_NAME_LENGTH = 16
+
+
+print(Fore.WHITE + "\nIt is time to create your character.\n")
+
+input(Fore.LIGHTBLACK_EX + "Press Enter to continue..." + Fore.WHITE)
+clear_screen()
+
+print("\nWhat is your name?")
+player_name = input("> ")
+
+
+while True:
+    if len(player_name) <= 1:
+        clear_screen()
+        print(Fore.RED + "\nYou must enter a name.")
+        sleep(3)
+        clear_screen()
+        print("\nWhat is your name?")
         player_name = input("> ")
         continue
 
     if not is_single_word(player_name):
-        print("\nEnter your nickname, not your full name.")
+        clear_screen()
+        print(Fore.RED + "\nEnter your nickname, not your full name.")
+        sleep(3)
+        clear_screen()
+        print("\nWhat is your name?")
         player_name = input("> ")
         continue
     if len(player_name) > MAX_NAME_LENGTH:
-        print(f"\nYour name must be {MAX_NAME_LENGTH} characters or less.")
+        clear_screen()
+        print(Fore.RED + f"\nYour name must be {MAX_NAME_LENGTH} characters or less.")
+        sleep(3)
+        clear_screen()
+        print("\nWhat is your name?")
         player_name = input("> ")
         continue
     if (
@@ -132,71 +161,101 @@ while ABILITY_POINTS > 0:
     ability = input("> ")
 
     if ":" not in ability:
-        print("\nPlease enter your ability and points separated by a colon.")
+        clear_screen()
+        print(Fore.RED + "\nPlease enter your ability and points separated by a colon.")
+        sleep(3)
+        clear_screen()
         continue
 
     ability, points = ability.split(":")
 
     if not points.isdigit():
-        print("\nPlease enter a valid number of points.")
+        clear_screen()
+        print(Fore.RED + "\nPlease enter a valid number of points.")
+        sleep(3)
+        clear_screen()
         continue
 
     points = int(points)
 
     if points > ABILITY_POINTS:
-        print("\nYou do not have enough points to spend.")
+        clear_screen()
+        print(Fore.RED + "\nYou do not have enough points to spend.")
+        sleep(3)
+        clear_screen()
         continue
 
     if ability == "1":
         if strength + points > MAX_POINTS_PER_ABILITY:
+            clear_screen()
             print(
-                f"\nYou cannot spend more than {MAX_POINTS_PER_ABILITY} points on strength."
+                Fore.RED
+                + f"\nYou cannot spend more than {MAX_POINTS_PER_ABILITY} points on strength."
             )
+            sleep(3)
+            clear_screen()
             continue
         strength += points
         ABILITY_POINTS -= points
     elif ability == "2":
         if agility + points > MAX_POINTS_PER_ABILITY:
+            clear_screen()
             print(
-                f"\nYou cannot spend more than {MAX_POINTS_PER_ABILITY} points on agility."
+                Fore.RED
+                + f"\nYou cannot spend more than {MAX_POINTS_PER_ABILITY} points on agility."
             )
+            sleep(3)
+            clear_screen()
             continue
         agility += points
         ABILITY_POINTS -= points
     elif ability == "3":
         if intelligence + points > MAX_POINTS_PER_ABILITY:
+            clear_screen()
             print(
-                f"\nYou cannot spend more than {MAX_POINTS_PER_ABILITY} points on intelligence."
+                Fore.RED
+                + f"\nYou cannot spend more than {MAX_POINTS_PER_ABILITY} points on intelligence."
             )
+            sleep(3)
+            clear_screen()
             continue
         intelligence += points
         ABILITY_POINTS -= points
     elif ability == "4":
         if stealth + points > MAX_POINTS_PER_ABILITY:
+            clear_screen()
             print(
-                f"\nYou cannot spend more than {MAX_POINTS_PER_ABILITY} points on stealth."
+                Fore.RED
+                + f"\nYou cannot spend more than {MAX_POINTS_PER_ABILITY} points on stealth."
             )
+            sleep(3)
+            clear_screen()
             continue
         stealth += points
         ABILITY_POINTS -= points
     else:
-        print("\nPlease enter a valid ability.")
+        clear_screen()
+        print(Fore.RED + "\nPlease enter a valid ability.")
+        sleep(3)
+        clear_screen()
         continue
 
 
 player = Player(player_name, strength, agility, intelligence, stealth)
 clear_screen()
 
-print("\n" + Fore.WHITE + "Your character has been created.\n")
+print("\n" + Fore.WHITE + "Your character has been created!\n")
 
-print("would you like to save your character? (y/n)")
-
-save = input("> ")
-if save.lower() == "y":
-    print("\nPlease enter a name for your save file.")
-    save_name = input("> ")
-    with open(saves_folder / f"{save_name}.txt", "w") as file:
-        file.write(
-            f"{player.name}\n{player.strength}\n{player.agility}\n{player.intelligence}\n{player.stealth}"
-        )
-    print("\nYour character has been saved.")
+print("\nPlease enter a name for your save file.")
+save_name = input("> ")
+with open(saves_folder / f"{save_name}.txt", "w") as file:
+    # JSON format
+    data = {
+        "name": player.name,
+        "strength": player.strength,
+        "agility": player.agility,
+        "intelligence": player.intelligence,
+        "stealth": player.stealth,
+    }
+    file.write(json.dumps(data))
+print(Style.BRIGHT + "\nYour character has been saved.")
